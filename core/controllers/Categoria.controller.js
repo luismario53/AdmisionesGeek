@@ -60,7 +60,14 @@ module.exports.delete = async (request, response) => {
     const id = request.params["id"];
     try {
         const result = await CategoriaDAO.delete(id);
-        response.sendStatus(result);
+        if (result) {
+            try {
+                fs.unlinkSync("./uploads/categorias/" + result.imagen);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        response.sendStatus(200);
     } catch (error) {
         response.status(500).json("No se pudo eliminar al usuario");
     }

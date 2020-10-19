@@ -19,18 +19,18 @@ module.exports.update = async (viejo, nuevo) => {
 module.exports.get = async (page) => {
     const PAGE_SIZE = 10;
     const skip = (page - 1) * PAGE_SIZE;
-    const result = CategoriaModel.find().skip(skip).limit(PAGE_SIZE);
+    const result = await CategoriaModel.find().skip(skip).limit(PAGE_SIZE);
     return result;
 }
 
 module.exports.getById = async (id) => {
-    const result = CategoriaModel.findById(id);
+    const result = await CategoriaModel.findById(id);
     return result;
 }
 
 module.exports.delete = async (id) => {
-    await CategoriaModel.findByIdAndDelete(id);
-    return 200;
+    const result = await CategoriaModel.findByIdAndDelete(id);
+    return result;
 }
 
 module.exports.getSize = async () => {
