@@ -3,9 +3,9 @@ const router = express.Router();
 const multipart = require("connect-multiparty");
 
 
-const md_upload_category = multipart({ uploadDir: "./uploads/categories" });
-const md_upload_employees = multipart({ uploadDir: "./uploads/employees" });
-const md_upload_products = multipart({ uploadDir: "./uploads/products" });
+const md_upload_category = multipart({ uploadDir: "./uploads/categorias" });
+const md_upload_employees = multipart({ uploadDir: "./uploads/empleados" });
+const md_upload_products = multipart({ uploadDir: "./uploads/productos" });
 
 
 const UsuarioController = require("../core/controllers/Usuario.controller");
@@ -19,8 +19,11 @@ router.post("/usuarios/add", UsuarioController.save);
 router.delete("/usuarios/delete/:id", UsuarioController.delete);
 router.post("/login", UsuarioController.login);
 
+router.patch("/categorias/update/:id", CategoriaController.update);
+router.get("/categorias/get/:page", CategoriaController.get);
 router.post("/categorias/agregar", md_upload_category, CategoriaController.save);
-router.patch("/categorias/upload-image/:nombre", md_upload_category, CategoriaController.saveImage);
+router.patch("/categorias/upload-image/:id", md_upload_category, CategoriaController.saveImage);
 router.get("/categorias/get-image/:id", CategoriaController.getImagen);
+router.delete("/categorias/delete/:id", CategoriaController.delete);
 
 module.exports = router;

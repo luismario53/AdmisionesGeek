@@ -6,6 +6,7 @@ const cors = require("cors");
 
 app.use(express.json());
 app.use(cors());
+app.use(express.static('uploads'));
 
 // app.use((req, res, next) => {
 //     res.header('Access-Control-Allow-Origin', '*');

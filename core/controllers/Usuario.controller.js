@@ -16,18 +16,22 @@ module.exports.get = async (request, response) => {
     try {
         let sizeResult = await UsuarioDAO.getSize();
         const usersResult = await UsuarioDAO.get(page);
-        if (sizeResult > 0) {
-            if (!Number.isInteger(sizeResult / 10)) {
-                sizeResult = parseInt(sizeResult / 10) + 1;
-            } else {
-                sizeResult = parseInt(sizeResult / 10)
+        if (usersResult) {
+            if (sizeResult > 0) {
+                if (!Number.isInteger(sizeResult / 10)) {
+                    sizeResult = parseInt(sizeResult / 10) + 1;
+                } else {
+                    sizeResult = parseInt(sizeResult / 10)
+                }
             }
+            const result = {
+                size: sizeResult,
+                users: usersResult
+            }
+            response.status(200).json(result);
+        } else {
+            response.sendStatus(404);
         }
-        const result = {
-            size: sizeResult,
-            users: usersResult
-        }
-        response.status(200).json(result);
     } catch (error) {
         response.sendStatus(500);
     }
@@ -37,9 +41,14 @@ module.exports.getByRol = async (request, response) => {
     const rol = request.params["rol"];
     try {
         const result = await UsuarioDAO.getByRol(rol);
-        response.status(200).json(result);
+        if (result) {
+            response.status(200).json(result);
+        } else {
+            response.sendStatus(404);
+        }
+
     } catch (error) {
-        response.status(500).json("No se encontró al usuarios");
+        response.sendStatus(500);
     }
 }
 
@@ -48,8 +57,13 @@ module.exports.update = async (request, response) => {
     const nuevo = request.body;
     try {
         const viejo = await UsuarioDAO.getById(id);
-        const result = await UsuarioDAO.update(viejo, nuevo);
-        response.sendStatus(result);
+        if (viejo) {
+            const result = await UsuarioDAO.update(viejo, nuevo);
+            response.sendStatus(result);
+        }else{
+            response.sendStatus(404);
+        }
+
         // logger.info(`Se actualizo al usuario con id: ${id}`);
     } catch (error) {
         response.status(500).json("No se pudo actualizar al usuario");
