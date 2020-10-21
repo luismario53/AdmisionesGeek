@@ -7,17 +7,29 @@ module.exports.save = async (request, response) => {
     const categoria = request.body;
     try {
         const result = await CategoriaDAO.save(categoria);
-        response.status(200).json(result);
+        if(result === 202){
+            response.sendStatus(result);
+        }else{
+            response.status(200).json(result);
+        }
     } catch (error) {
-        response.sendStatus(500).json("Error creando al usuario");
+        response.sendStatus(500).json("Error creando la categoria");
     }
 }
 
+module.exports.getNames = async (request, response) =>{
+    try {
+        const result = await CategoriaDAO.getNames();
+        if(!result) return response.status(404);
+        response.status(200).json(result);
+    } catch (error) {
+        response.status(500).json("No se pudo obtener las categorias");
+    }
+}
 module.exports.update = async (request, response) => {
     const id = request.params["id"];
     const nuevo = request.body;
     try {
-
         const viejo = await CategoriaDAO.getById(id);
         if (viejo) {
             const result = await CategoriaDAO.update(viejo, nuevo);
@@ -28,6 +40,21 @@ module.exports.update = async (request, response) => {
     } catch (error) {
         response.status(500).json("No se pudo actualizar la categoria");
     }
+}
+
+module.exports.getCategories = async (request, response) => {
+    try {
+        const result = await CategoriaDAO.getCategories();
+        if (result) {
+            response.status(200).json(result);
+        } else {
+            response.sendStatus(202);
+        }
+
+    } catch (error) {
+        response.status(500).json("No se pudo actualizar la categoria");
+    }
+
 }
 
 module.exports.get = async (request, response) => {
@@ -121,5 +148,4 @@ module.exports.getImagen = async (request, response) => {
     } catch (error) {
         console.error(error);
     }
-
 }

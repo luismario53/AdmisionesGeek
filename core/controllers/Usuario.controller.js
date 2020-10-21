@@ -60,7 +60,7 @@ module.exports.update = async (request, response) => {
         if (viejo) {
             const result = await UsuarioDAO.update(viejo, nuevo);
             response.sendStatus(result);
-        }else{
+        } else {
             response.sendStatus(404);
         }
 
@@ -85,8 +85,9 @@ module.exports.login = async (request, response) => {
     const correo = request.body.correo;
     const password = request.body.password;
     try {
-        const result = await UsuarioDAO.login(correo, password);
-        response.sendStatus(result);
+        const token = await UsuarioDAO.login(correo, password);
+        if (token === 404) response.status(404);
+        response.json(token);
     } catch (error) {
         response.status(500).json("Error al iniciar sesion");
     }

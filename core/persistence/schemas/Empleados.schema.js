@@ -10,6 +10,6 @@ const EmpleadoSchema = new Schema({
     telefono: { type: Number, required: true, minlength: 10 },
     imagen: { type: String, required: true },
     horario: { type: String, required: true }
-}, { timestamps: true });
+}, { timestamps: true , versionKey: false});
 
 module.exports = mongoose.model("Empleado", EmpleadoSchema, "Empleados");

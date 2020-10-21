@@ -7,6 +7,6 @@ const CategoriaSchema = new Schema({
     descripcion: { type: String, required: true, maxlength: 100 },
     imagen: { type: String, required: true },
     productos: [{ type: ObjectId, ref: "Producto", required: false }]
-}, { timestamps: true });
+}, { timestamps: true, versionKey: false });
 
 module.exports = mongoose.model("Categoria", CategoriaSchema, "Categorias");

@@ -11,9 +11,35 @@ module.exports.save = async (categoria) => {
     }
 }
 
+module.exports.addToCategory = async (idCategoria, idProducto) => {
+    const result = await CategoriaModel.updateOne(
+        { _id: idCategoria },
+        { $push: { productos: idProducto } });
+    return 200;
+}
+
+module.exports.updateToCategory = async (idCategoria, idProducto) => {
+    const result = await CategoriaModel.updateOne(
+        { _id: idCategoria },
+        { $push: { productos: idProducto } });
+    return 200;
+}
+
+module.exports.deleteToCategory = async (idCategoria, idProducto) => {
+    const result = await CategoriaModel.updateOne(
+        { _id: idCategoria },
+        { $pull: { productos: idProducto } });
+    return 200;
+}
+
 module.exports.update = async (viejo, nuevo) => {
     const result = await CategoriaModel.updateOne(viejo, nuevo);
     return 200;
+}
+
+module.exports.getNames = async () => {
+    const result = await CategoriaModel.find().select("-productos -descripcion -imagen -createdAt -updatedAt");
+    return result;
 }
 
 module.exports.get = async (page) => {
