@@ -112,7 +112,7 @@ module.exports.saveImage = async (request, response) => {
     }
     try {
         const oldImage = await ProductoDAO.getById(id);
-        if (oldImage) {
+        if (oldImage.imagenes.length > 0) {
             for (let i = 0; i < oldImage.imagenes.length; i++) {
                 try {
                     fs.unlinkSync("./uploads/productos/" + oldImage.imagenes[i]);
@@ -120,7 +120,7 @@ module.exports.saveImage = async (request, response) => {
                     console.log(error);
                 }
             }
-            const rem = await CategoriaDAO.deleteToCategory(result.categoria, result._id);
+            //const rem = await CategoriaDAO.deleteToCategory(result.categoria, result._id);
         }
         const result = await ProductoDAO.saveImage(imagenes, id);
         response.sendStatus(result);

@@ -18,12 +18,12 @@ module.exports.addToCategory = async (idCategoria, idProducto) => {
     return 200;
 }
 
-module.exports.updateToCategory = async (idCategoria, idProducto) => {
-    const result = await CategoriaModel.updateOne(
-        { _id: idCategoria },
-        { $push: { productos: idProducto } });
-    return 200;
-}
+// module.exports.updateToCategory = async (idCategoria, idProducto) => {
+//     const result = await CategoriaModel.updateOne(
+//         { _id: idCategoria },
+//         { $push: { productos: idProducto } });
+//     return 200;
+// }
 
 module.exports.deleteToCategory = async (idCategoria, idProducto) => {
     const result = await CategoriaModel.updateOne(

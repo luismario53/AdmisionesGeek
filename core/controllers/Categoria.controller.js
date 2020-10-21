@@ -7,9 +7,9 @@ module.exports.save = async (request, response) => {
     const categoria = request.body;
     try {
         const result = await CategoriaDAO.save(categoria);
-        if(result === 202){
+        if (result === 202) {
             response.sendStatus(result);
-        }else{
+        } else {
             response.status(200).json(result);
         }
     } catch (error) {
@@ -17,11 +17,19 @@ module.exports.save = async (request, response) => {
     }
 }
 
-module.exports.getNames = async (request, response) =>{
+module.exports.getNames = async (request, response) => {
     try {
+        let categorias = [];
         const result = await CategoriaDAO.getNames();
-        if(!result) return response.status(404);
-        response.status(200).json(result);
+        if (!result) return response.status(404);
+        for (let i = 0; i < result.length; i++) {
+            var aux = {
+                name: result[i].nombre,
+                value: result[i]._id
+            }
+            categorias.push(aux);
+        }
+        response.status(200).json(categorias);
     } catch (error) {
         response.status(500).json("No se pudo obtener las categorias");
     }
