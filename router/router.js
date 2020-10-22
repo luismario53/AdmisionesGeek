@@ -21,37 +21,37 @@ const ProductoController = require("../core/controllers/Producto.controller");
 const EmpleadoController = require("../core/controllers/Empleado.controller");
 const AuthVerification = require("../middlewares/AuthVerification");
 
-router.get("/usuarios/getbyrol/:rol", UsuarioController.getByRol);
-router.patch("/updateuser/:id", UsuarioController.update);
-router.post("/usuarios/add", UsuarioController.save);
-router.delete("/usuarios/delete/:id", UsuarioController.delete);
+router.get("/usuarios/getbyrol/:rol", [AuthVerification.verificarToken, AuthVerification.isAdmin], UsuarioController.getByRol);
+router.patch("/updateuser/:id", [AuthVerification.verificarToken, AuthVerification.isAdmin], UsuarioController.update);
+router.post("/usuarios/add", [AuthVerification.verificarToken, AuthVerification.isAdmin], UsuarioController.save);
+router.delete("/usuarios/delete/:id", [AuthVerification.verificarToken, AuthVerification.isAdmin], UsuarioController.delete);
 router.get("/usuarios/:page", [AuthVerification.verificarToken, AuthVerification.isAdmin], UsuarioController.get);
 
-router.patch("/categorias/update/:id", CategoriaController.update);
-router.get("/categorias/:page", [AuthVerification.verificarToken, AuthVerification.isAux], CategoriaController.get);
-router.post("/categorias/agregar", md_upload_category, CategoriaController.save);
-router.patch("/categorias/upload-image/:id", md_upload_category, CategoriaController.saveImage);
-router.get("/categorias/get-image/:id", CategoriaController.getImages);
-router.delete("/categorias/delete/:id", CategoriaController.delete);
+router.patch("/categorias/update/:id", [AuthVerification.verificarToken, AuthVerification.isAux], CategoriaController.update);
+router.get("/categorias/:page", [AuthVerification.verificarToken, AuthVerification.isCon], CategoriaController.get);
+router.post("/categorias/agregar", [AuthVerification.verificarToken, AuthVerification.isAux], md_upload_category, CategoriaController.save);
+router.patch("/categorias/upload-image/:id", [AuthVerification.verificarToken, AuthVerification.isAux], md_upload_category, CategoriaController.saveImage);
+router.get("/categorias/get-image/:id", [AuthVerification.verificarToken, AuthVerification.isCon], CategoriaController.getImages);
+router.delete("/categorias/delete/:id", [AuthVerification.verificarToken, AuthVerification.isAux], CategoriaController.delete);
 
 
-router.get("/productos/getNames", [AuthVerification.verificarToken, AuthVerification.isAux], CategoriaController.getNames);
-router.post("/productos/agregar", ProductoController.save);
-router.get("/productos/:page", [AuthVerification.verificarToken, AuthVerification.isAux], ProductoController.get);
-router.patch("/productos/upload-image/:id", md_upload_products, ProductoController.saveImage);
-router.get("/productos/get-images/:id", ProductoController.getImages);
-router.patch("/productos/update/:id", ProductoController.update);
-router.delete("/productos/delete/:id", ProductoController.delete);
+router.get("/productos/getNames", [AuthVerification.verificarToken, AuthVerification.isCon], CategoriaController.getNames);
+router.post("/productos/agregar", [AuthVerification.verificarToken, AuthVerification.isAux], ProductoController.save);
+router.get("/productos/:page", [AuthVerification.verificarToken, AuthVerification.isCon], ProductoController.get);
+router.patch("/productos/upload-image/:id", [AuthVerification.verificarToken, AuthVerification.isAux], md_upload_products, ProductoController.saveImage);
+router.get("/productos/get-images/:id", [AuthVerification.verificarToken, AuthVerification.isCon], ProductoController.getImages);
+router.patch("/productos/update/:id", [AuthVerification.verificarToken, AuthVerification.isAux], ProductoController.update);
+router.delete("/productos/delete/:id", [AuthVerification.verificarToken, AuthVerification.isAux], ProductoController.delete);
 
 router.post("/empleados/agregar", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.save);
-router.get("/empleados/:page", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.get);
+router.get("/empleados/:page", [AuthVerification.verificarToken, AuthVerification.isCon], EmpleadoController.get);
 router.patch("/empleados/upload-image/:id", [AuthVerification.verificarToken, AuthVerification.isAux], md_upload_employees, EmpleadoController.saveImage);
-router.get("/empleados/get-images/:id", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.getImages);
+router.get("/empleados/get-images/:id", [AuthVerification.verificarToken, AuthVerification.isCon], EmpleadoController.getImages);
 router.delete("/empleados/delete/:id", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.delete);
 
 router.post("/login", UsuarioController.login);
 
-router.get("/", [AuthVerification.verificarToken, AuthVerification.isAux]);
+router.get("/", [AuthVerification.verificarToken, AuthVerification.isCon]);
 
 router.get("/adm", [AuthVerification.verificarToken, AuthVerification.isAdminAuth]);
 

@@ -14,6 +14,12 @@ module.exports.save = async (producto) => {
     }
 }
 
+module.exports.deleteImages = async (id, imagen) => {
+    const result = await ProductoModel.updateOne(
+        { _id: id },
+        { $pull: { imagenes: imagen } });
+}
+
 module.exports.get = async (page) => {
     const PAGE_SIZE = 10;
     const skip = (page - 1) * PAGE_SIZE;

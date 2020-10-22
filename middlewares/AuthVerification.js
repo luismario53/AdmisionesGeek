@@ -10,6 +10,7 @@ module.exports.verificarToken = async (request, response, next) => {
     try {
         const decoded = jwt.verify(token, config.secret);
         request.userId = decoded.id;
+        console.log(request.userId)
         const usuario = await UsuarioModel.getById(request.userId);
         if (!usuario) return response.status(404).json({ message: "No user" });
         next();
@@ -20,6 +21,7 @@ module.exports.verificarToken = async (request, response, next) => {
 
 module.exports.isAdmin = async (request, response, next) => {
     try {
+        console.log(request.userId)
         const usuario = await UsuarioModel.getById(request.userId);
         const roles = await RolModel.getById(usuario.rol);
         for (let i = 0; i < roles.length; i++) {
@@ -57,6 +59,23 @@ module.exports.isAux = async (request, response, next) => {
 
         for (let i = 0; i < roles.length; i++) {
             if (roles[i].rol === "Auxiliar" || roles[i].rol === "Administrador") {
+                next();
+                return;
+            }
+        }
+        return response.status(403).json({ message: "Require Auxiliar Role!" });
+    } catch (error) {
+        return response.status(500).send({ message: error });
+    }
+}
+
+module.exports.isCon = async (request, response, next) => {
+    try {
+        const usuario = await UsuarioModel.getById(request.userId);
+        const roles = await RolModel.getById(usuario.rol);
+
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].rol === "Auxiliar" || roles[i].rol === "Administrador" || roles[i].rol === "Consultor") {
                 next();
                 return;
             }

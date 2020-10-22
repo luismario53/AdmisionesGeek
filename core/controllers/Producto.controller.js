@@ -116,6 +116,7 @@ module.exports.saveImage = async (request, response) => {
             for (let i = 0; i < oldImage.imagenes.length; i++) {
                 try {
                     fs.unlinkSync("./uploads/productos/" + oldImage.imagenes[i]);
+                    const deleted = await ProductoDAO.deleteImages(id, oldImage.imagenes[i]);
                 } catch (error) {
                     console.log(error);
                 }

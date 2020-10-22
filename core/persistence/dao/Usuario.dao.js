@@ -71,7 +71,7 @@ module.exports.login = async (correo, password) => {
         })
         return {
             token: token,
-            rol: usuario.rol.rol
+            id: usuario._id
         };
     } else {
         return 401;
