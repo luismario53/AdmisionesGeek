@@ -18,6 +18,7 @@ const md_upload_products = multipart({ uploadDir: "./uploads/productos" });
 const UsuarioController = require("../core/controllers/Usuario.controller");
 const CategoriaController = require("../core/controllers/Categoria.controller");
 const ProductoController = require("../core/controllers/Producto.controller");
+const EmpleadoController = require("../core/controllers/Empleado.controller");
 const AuthVerification = require("../middlewares/AuthVerification");
 
 router.get("/usuarios/getbyrol/:rol", UsuarioController.getByRol);
@@ -30,7 +31,7 @@ router.patch("/categorias/update/:id", CategoriaController.update);
 router.get("/categorias/:page", [AuthVerification.verificarToken, AuthVerification.isAux], CategoriaController.get);
 router.post("/categorias/agregar", md_upload_category, CategoriaController.save);
 router.patch("/categorias/upload-image/:id", md_upload_category, CategoriaController.saveImage);
-router.get("/categorias/get-image/:id", CategoriaController.getImagen);
+router.get("/categorias/get-image/:id", CategoriaController.getImages);
 router.delete("/categorias/delete/:id", CategoriaController.delete);
 
 
@@ -41,6 +42,12 @@ router.patch("/productos/upload-image/:id", md_upload_products, ProductoControll
 router.get("/productos/get-images/:id", ProductoController.getImages);
 router.patch("/productos/update/:id", ProductoController.update);
 router.delete("/productos/delete/:id", ProductoController.delete);
+
+router.post("/empleados/agregar", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.save);
+router.get("/empleados/:page", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.get);
+router.patch("/empleados/upload-image/:id", [AuthVerification.verificarToken, AuthVerification.isAux], md_upload_employees, EmpleadoController.saveImage);
+router.get("/empleados/get-images/:id", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.getImages);
+router.delete("/empleados/delete/:id", [AuthVerification.verificarToken, AuthVerification.isAux], EmpleadoController.delete);
 
 router.post("/login", UsuarioController.login);
 

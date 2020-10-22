@@ -42,11 +42,15 @@ module.exports.getByRol = async (request, response) => {
     try {
         const result = await UsuarioDAO.getByRol(rol);
         if (result) {
-            response.status(200).json(result);
-        } else {
-            response.sendStatus(404);
+            let lista = [];
+            for (let i = 0; i < result.length; i++) {
+                if (result[i].rol.rol.startsWith(rol)) {
+                    lista.push(result[i]);
+                }
+            }
+            response.status(200).json(lista);
         }
-
+        // response.sendStatus(404);
     } catch (error) {
         response.sendStatus(500);
     }

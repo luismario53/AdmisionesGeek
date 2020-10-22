@@ -36,13 +36,16 @@ module.exports.getSize = async () => {
 }
 
 module.exports.getByRol = async (rol) => {
-    const result = UsuarioModel.find({ rol: { $regex: rol } });
+    const result = UsuarioModel.find().populate({
+        path: 'rol',
+        select: '-createdAt -updatedAt'
+    });
     return result;
 }
 
 //para actualizar usuario
 module.exports.getById = async (id) => {
-    const result = UsuarioModel.findById(id).populate("rol");
+    const result = (await UsuarioModel.findById(id));
     return result;
 }
 

@@ -22,7 +22,6 @@ module.exports.isAdmin = async (request, response, next) => {
     try {
         const usuario = await UsuarioModel.getById(request.userId);
         const roles = await RolModel.getById(usuario.rol);
-        console.log(roles);
         for (let i = 0; i < roles.length; i++) {
             if (roles[i].rol === "Administrador") {
                 next();

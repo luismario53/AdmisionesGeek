@@ -1,76 +1,26 @@
-const CategoriaDAO = require("../persistence/dao/Categoria.dao");
-const fs = require("fs");
-const path = require("path");
-const path_image = "http://localhost:4000/categorias/";
+const EmpleadoDAO = require("../persistence/dao/Empleado.dao");
+const path_image = "http://localhost:4000/empleados/";
 
 module.exports.save = async (request, response) => {
-    const categoria = request.body;
+    const empleado = request.body;
     try {
-        const result = await CategoriaDAO.save(categoria);
+        const result = await EmpleadoDAO.save(empleado);
         if (result === 202) {
             response.sendStatus(result);
         } else {
             response.status(200).json(result);
         }
     } catch (error) {
-        response.sendStatus(500).json("Error creando la categoria");
+        response.sendStatus(error).json();
     }
-}
-
-module.exports.getNames = async (request, response) => {
-    try {
-        let categorias = [];
-        const result = await CategoriaDAO.getNames();
-        if (!result) return response.status(404);
-        for (let i = 0; i < result.length; i++) {
-            var aux = {
-                name: result[i].nombre,
-                value: result[i]._id
-            }
-            categorias.push(aux);
-        }
-        response.status(200).json(categorias);
-    } catch (error) {
-        response.status(500).json("No se pudo obtener las categorias");
-    }
-}
-module.exports.update = async (request, response) => {
-    const id = request.params["id"];
-    const nuevo = request.body;
-    try {
-        const viejo = await CategoriaDAO.getById(id);
-        if (viejo) {
-            const result = await CategoriaDAO.update(viejo, nuevo);
-            response.sendStatus(result);
-        } else {
-            response.sendStatus(404);
-        }
-    } catch (error) {
-        response.status(500).json("No se pudo actualizar la categoria");
-    }
-}
-
-module.exports.getCategories = async (request, response) => {
-    try {
-        const result = await CategoriaDAO.getCategories();
-        if (result) {
-            response.status(200).json(result);
-        } else {
-            response.sendStatus(202);
-        }
-
-    } catch (error) {
-        response.status(500).json("No se pudo actualizar la categoria");
-    }
-
 }
 
 module.exports.get = async (request, response) => {
     const page = parseInt(request.params["page"]);
     try {
-        let sizeResult = await CategoriaDAO.getSize();
-        const CategoriaResult = await CategoriaDAO.get(page);
-        if (CategoriaResult) {
+        let sizeResult = await EmpleadoDAO.getSize();
+        const empleadosResult = await EmpleadoDAO.get(page);
+        if (empleadosResult) {
             if (sizeResult > 0) {
                 if (!Number.isInteger(sizeResult / 10)) {
                     sizeResult = parseInt(sizeResult / 10) + 1;
@@ -80,7 +30,7 @@ module.exports.get = async (request, response) => {
             }
             const result = {
                 size: sizeResult,
-                categories: CategoriaResult
+                empleados: empleadosResult
             }
             response.status(200).json(result);
         } else {
@@ -91,13 +41,17 @@ module.exports.get = async (request, response) => {
     }
 }
 
+module.exports.update = async(request, response) =>{
+
+}
+
 module.exports.delete = async (request, response) => {
     const id = request.params["id"];
     try {
-        const result = await CategoriaDAO.delete(id);
+        const result = await EmpleadoDAO.delete(id);
         if (result) {
             try {
-                fs.unlinkSync("./uploads/categorias/" + result.imagen);
+                fs.unlinkSync("./uploads/empleados/" + result.imagen);
             } catch (error) {
                 console.log(error);
             }
@@ -107,6 +61,7 @@ module.exports.delete = async (request, response) => {
         response.status(500).json("No se pudo eliminar al usuario");
     }
 }
+
 
 module.exports.saveImage = async (request, response) => {
 
@@ -126,15 +81,16 @@ module.exports.saveImage = async (request, response) => {
         });
     } else {
         try {
-            const oldImage = await CategoriaDAO.getById(id);
+            console.log("llego aqui ")
+            const oldImage = await EmpleadoDAO.getById(id);
             if (oldImage.imagen !== 'default') {
                 try {
-                    fs.unlinkSync("./uploads/categorias/" + oldImage.imagen);
+                    fs.unlinkSync("./uploads/empleados/" + oldImage.imagen);
                 } catch (error) {
                     console.log(error);
                 }
             }
-            const result = await CategoriaDAO.saveImage(file_name, id);
+            const result = await EmpleadoDAO.saveImage(file_name, id);
             response.sendStatus(200);
         } catch (error) {
             response.sendStatus(500).json("Error subiendo imagen");
@@ -145,7 +101,8 @@ module.exports.saveImage = async (request, response) => {
 module.exports.getImages = async (request, response) => {
     var id = request.params["id"];
     try {
-        const result = await CategoriaDAO.getImagen(id);
+        const result = await EmpleadoDAO.getImagen(id);
+        console.log(result.imagen)
         if (result) {
             var path_file = path_image + result.imagen;
             // response.sendFile(path.resolve(path_file));
